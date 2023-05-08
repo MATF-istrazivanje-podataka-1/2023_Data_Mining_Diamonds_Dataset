@@ -2,4 +2,4 @@
 
 Autor: Luka Arambasic 169/2020  
 Profesor: prof. dr Nenad Mitic  
-Asistent: Marija Eric
+Asistent: Stefan Kapunac

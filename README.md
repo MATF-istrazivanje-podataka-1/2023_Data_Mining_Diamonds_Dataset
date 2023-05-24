@@ -2,13 +2,11 @@
 
 Dataset: https://www.tensorflow.org/datasets/catalog/diamonds  
 
-Ucitavanje iz **tensorflow_dataset** biblioteke:  
-'''
-ds = tfds.load('diamonds', split='all')
-assert isinstance(ds, tf.data.Dataset)
+Ucitavanje iz **tensorflow_datasets** biblioteke: 
 
-data = tfds.as_dataframe(ds)
-'''  
+->ds = tfds.load('diamonds', split='all')  
+->assert isinstance(ds, tf.data.Dataset)  
+->data = tfds.as_dataframe(ds)  
 
 ***
 Models:  

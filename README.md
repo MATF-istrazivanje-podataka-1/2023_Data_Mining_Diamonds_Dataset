@@ -10,7 +10,7 @@ Ucitavanje iz **tensorflow_datasets** biblioteke:
 
 ***
 Models:  
-1. Clasification: DecisionTreeClassifier, KNeighborsClassifier, MLPClassifier, CategoricalNB, RandomForestClassifier and XGBClassifier  
+1. Clasification: DecisionTreeClassifier, KNeighborsClassifier, MLPClassifier, SVC, RandomForestClassifier and XGBClassifier  
 2. Clustering: KMeans, AgglomerativeClustering, DBSCAN, SpectralClustering
 3. Association rules: Apriori 
 

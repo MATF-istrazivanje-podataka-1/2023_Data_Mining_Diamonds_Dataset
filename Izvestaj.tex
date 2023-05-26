@@ -65,7 +65,7 @@ S obzirom da imamo preko 50 000 instanci u skupu, 70\% cini 35 000 instanci. Kor
 Takodje, instanci u klasi "15000+" ima svega 3\% a ona sadrzi najveci deo outliera i visoke cene, nesto sto bismo smatrali "ekstremnim vrednostima". Oversamplovanje ovakve klase sa 1500 instanci na 35 000 dovodi u rizik da nam se smanji konzistentnost skupa podataka, pogotovo ako novogenerisane instance ne bi bile dobra reprezentacija inicijalne distribucije. Nadalje cemo koristiti tehniku \textit{weighting}, tamo gde bude potrebno. Ona podrazumeva da kao argument nasem klasifikacionom modelu prosledimo tezinu klase kao merilo paznje koju ce joj posvetiti.\\\\
 
 \subsection{Klasifikacija}
-Modeli korisceni za klasifikaciju su: \textit{DecisionTreeClassifier, KNeighborsClassifier, MLPClassifier, SVM, RandomForestClassifier i XGBClassifier}.
+Modeli korisceni za klasifikaciju su: \textit{DecisionTreeClassifier, KNeighborsClassifier, MLPClassifier, SVC, RandomForestClassifier i XGBClassifier}.
 
 \textbf{DecisionTreeClassifier}
 Drveta odlucivanja su hijerarhijske strukture koje se sastoje od cvorova i grana. Svaki cvor predstavlja testiranje odredjene osobine, dok grane predstavljaju moguce vrednosti te osobine. Na osnovu rezultata testiranja, model se krece kroz drveta sve do listova, gde se donose konacne odluke o klasifikaciji. Klasifikacija novih instanci se vrsi prolaskom kroz model drveta, pri cemu se na svakom cvoru primenjuje odgovarajuci test i prelazi se na sledeci cvor sve dok se ne stigne do lista. Na kraju se vrsi klasifikacija na osnovu odluke u listu.
@@ -94,8 +94,8 @@ MLPClassifier je mocan alat za modelovanje kompleksnih veza izmedju ulaznih osob
 
 Koristimo train-test-split kao i do sada kako bismo uvideli osnovne karakteristike modela. Od pomocnih funkcija tu su \textit{model\_report i plot\_learning\_curve} koja iscrtava krivu ucenja modela na trening skupu. Za model\_report su korisceni \textit{precision, recall i f1-score} kao i accuracy. Pored njih, funkcija i vizualizuje matricu konfuzije. Koriscene su tehnike \textit{PCA i GridSearchCV}. U potrazi za najboljim parametrima isprobano je nekoliko jednoslojnih i viseslojnih arhitektura mreze kao i razlicite aktivacione funkcije. Nakon poredjenja svih modela i rezultata, ispostavlja se da se najbolje pokazala prvobitna konfiguracija parametara.\\
 
-\textbf{SVM}
- Osnovna ideja SVM-a je pronaci hiper-ravan (u slucaju binarne klasifikacije) ili hiper-ravni (u slucaju viseklasne klasifikacije, kao u nasem slucaju) koje najbolje razdvajaju podatke razlicitih klasa. Hiper-ravni se biraju tako da maksimizuju rastojanje od najblizih tacaka svake klase, kojima se nazivaju potporni vektori. SVM koristi i tehniku zvanu "kernel trick" koja omogucava da se podaci preslikaju u prostor vece dimenzionalnosti radi bolje separacije.
+\textbf{SVC}
+ Osnovna ideja SVC-a je pronaci hiper-ravan (u slucaju binarne klasifikacije) ili hiper-ravni (u slucaju viseklasne klasifikacije, kao u nasem slucaju) koje najbolje razdvajaju podatke razlicitih klasa. Hiper-ravni se biraju tako da maksimizuju rastojanje od najblizih tacaka svake klase, kojima se nazivaju potporni vektori. SVC koristi i tehniku zvanu "kernel trick" koja omogucava da se podaci preslikaju u prostor vece dimenzionalnosti radi bolje separacije.
 \\
 
 Od pomocnih funkcija koriste se vec opisana \textit{model\_report}. Istrenirano je vise modela, primenjene su tehnike PCA i GridSearchCV i uporedjeni su dobijeni rezultati. S obzirom da nemamo jasno definisane grupacije u skupu podataka, razumljivo je zasto ovaj algoritam daje najgori performans. Odredjivanje hiper-ravni nije trivijalan posao. Sve u svemu, rezultati su i dalje zadovoljavajuci, mada je vreme treniranja skupo. \\

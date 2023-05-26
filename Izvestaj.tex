@@ -65,7 +65,7 @@ S obzirom da imamo preko 50 000 instanci u skupu, 70\% cini 35 000 instanci. Kor
 Takodje, instanci u klasi "15000+" ima svega 3\% a ona sadrzi najveci deo outliera i visoke cene, nesto sto bismo smatrali "ekstremnim vrednostima". Oversamplovanje ovakve klase sa 1500 instanci na 35 000 dovodi u rizik da nam se smanji konzistentnost skupa podataka, pogotovo ako novogenerisane instance ne bi bile dobra reprezentacija inicijalne distribucije. Nadalje cemo koristiti tehniku \textit{weighting}, tamo gde bude potrebno. Ona podrazumeva da kao argument nasem klasifikacionom modelu prosledimo tezinu klase kao merilo paznje koju ce joj posvetiti.\\\\
 
 \subsection{Klasifikacija}
-Modeli korisceni za klasifikaciju su: \textit{DecisionTreeClassifier, KNeighborsClassifier, MLPClassifier, CategoricalNB, RandomForestClassifier i XGBClassifier}.
+Modeli korisceni za klasifikaciju su: \textit{DecisionTreeClassifier, KNeighborsClassifier, MLPClassifier, SVM, RandomForestClassifier i XGBClassifier}.
 
 \textbf{DecisionTreeClassifier}
 Drveta odlucivanja su hijerarhijske strukture koje se sastoje od cvorova i grana. Svaki cvor predstavlja testiranje odredjene osobine, dok grane predstavljaju moguce vrednosti te osobine. Na osnovu rezultata testiranja, model se krece kroz drveta sve do listova, gde se donose konacne odluke o klasifikaciji. Klasifikacija novih instanci se vrsi prolaskom kroz model drveta, pri cemu se na svakom cvoru primenjuje odgovarajuci test i prelazi se na sledeci cvor sve dok se ne stigne do lista. Na kraju se vrsi klasifikacija na osnovu odluke u listu.
@@ -94,12 +94,11 @@ MLPClassifier je mocan alat za modelovanje kompleksnih veza izmedju ulaznih osob
 
 Koristimo train-test-split kao i do sada kako bismo uvideli osnovne karakteristike modela. Od pomocnih funkcija tu su \textit{model\_report i plot\_learning\_curve} koja iscrtava krivu ucenja modela na trening skupu. Za model\_report su korisceni \textit{precision, recall i f1-score} kao i accuracy. Pored njih, funkcija i vizualizuje matricu konfuzije. Koriscene su tehnike \textit{PCA i GridSearchCV}. U potrazi za najboljim parametrima isprobano je nekoliko jednoslojnih i viseslojnih arhitektura mreze kao i razlicite aktivacione funkcije. Nakon poredjenja svih modela i rezultata, ispostavlja se da se najbolje pokazala prvobitna konfiguracija parametara.\\
 
-\textbf{CategoricalNB}
-Ovaj algoritam se zasniva na Naivnom Bajesovom pristupu i prilagodjen je za rad sa podacima koji imaju diskretne kategorije umesto kontinuiranih vrednosti. Naivni Bajesov pristup pretpostavlja nezavisnost izmedju ulaznih osobina, sto moze biti korisno kada je ta pretpostavka blizu istine. CategoricalNB primenjuje Naivni Bajesov pristup na podatke koji sadrze kategoricke osobine, kao sto su razlicite kategorije, labele ili oznake. Koriste se statisticke metode, posebno verovatnoce Bayesove teoreme.
+\textbf{SVM}
+ Osnovna ideja SVM-a je pronaci hiper-ravan (u slucaju binarne klasifikacije) ili hiper-ravni (u slucaju viseklasne klasifikacije, kao u nasem slucaju) koje najbolje razdvajaju podatke razlicitih klasa. Hiper-ravni se biraju tako da maksimizuju rastojanje od najblizih tacaka svake klase, kojima se nazivaju potporni vektori. SVM koristi i tehniku zvanu "kernel trick" koja omogucava da se podaci preslikaju u prostor vece dimenzionalnosti radi bolje separacije.
+\\
 
-CategoricalNB je pogodan za probleme klasifikacije gde se koriste kategoricki podaci. Takodje, poznat je po svojoj brzini izvrsavanja i otpornosti na sum u podacima. Buduci da se zasniva na radu sa verovatnocama, algoritam moze pravilno modelirati raspodelu kategorickih vrednosti, cak i u prisustvu suma ili nedostajucih vrednosti.\\
-
-Od pomocnih funkcija koriste se vec opisana \textit{model\_report} i dodata je \\\textbf{plot\_predicted\_probabilities} s obzirom da nam algoritam nudi mogucnost da prikazemo verovatnocu da instanca pripada odredjenoj klasi. Ona iscrtava grafikon na kome su predstavljene verovatnoce. Istrenirano je vise modela, primenjene su tehnike PCA i GridSearchCV i uporedjeni su dobijeni rezultati. Ono sto se moglo odmah uociti je da u poredjenju sa prethodnim algoritmima, ovaj zaostaje po svim metrikama evaluacije koje smo izabrali. Razlog za to je najverovatnije visoka korelacija izmedju atributa i to sto imamo samo 3 kategoricka atributa dok su ostali kontinualni. Iako rezultat nije toliko los, opet je u velikom deficitu u poredjenju sa ostalim algoritmima.\\
+Od pomocnih funkcija koriste se vec opisana \textit{model\_report}. Istrenirano je vise modela, primenjene su tehnike PCA i GridSearchCV i uporedjeni su dobijeni rezultati. S obzirom da nemamo jasno definisane grupacije u skupu podataka, razumljivo je zasto ovaj algoritam daje najgori performans. Odredjivanje hiper-ravni nije trivijalan posao. Sve u svemu, rezultati su i dalje zadovoljavajuci, mada je vreme treniranja skupo. \\
 
 \textbf{RandomForestClassifier}
 Algoritam se zasniva na konceptu ensemble metoda i kombinuje vise stabala odlucivanja kako bi donosio odluke o klasifikaciji kombinovanjem predvidjanja svakog stabla. Odluka se obicno vrsi vecinskim glasanjem, gde se klasa koja je najcesca medju svim stablima smatra konacnim predvidjanjem. Svako stablo se trenira na razlicitom podskupu podataka dobijenih metodom slucajnog izbora. Takodje, tokom konstrukcije svakog stabla, vrsi se slucajan izbor atributa koji se koriste za donosenje odluka na svakom cvoru.
@@ -140,7 +139,7 @@ Kako bismo to resili, uvescemo pomocnu funkciju \textit{plot\_search} koja ce na
 \textbf{SpectralClustering} je algoritam klasterovanja koji se koristi za grupisanje podataka na osnovu spektralne analize matrice slicnosti. Ovaj algoritam ima sposobnost otkrivanja slozenih struktura i nelinearnih veza medju podacima. Vazno je napomenuti da spektralno klasterovanje zahteva odabir odgovarajucih parametara, kao sto su broj klastera i metoda konstrukcije matrice slicnosti. Pravilan izbor ovih parametara je kljucan za postizanje kvalitetnih rezultata klasterovanja. Mana je to sto spektralno klasterovanje moze biti komputaciono zahtevno za velike skupove podataka. Nakon \textit{plot\_search}-a i analize \textit{silhouette} koeficijenta za razlicit broj klastera, pazljivo su razmatrani svi rezultati i kako predstavljeni pomocu funkcije za crtanje \textit{silhouette diagram}-a.\\
 
 \subsection{Pravila pridruzivanja}
-\textbf{Apriori} je algoritam za otkrivanje asocijativnih pravila u skupovima podataka. Algoritam funkcionise na principu pronalazenja cestih uzoraka u podacima. Asocijativna pravila su izrazi u obliku "A -> B", gde A i B predstavljaju skupove stavki, a strelica predstavlja implikaciju. Ova pravila se zasnivaju na merama \textit{support} i \textit{confidence}, koje se koriste za procenu znacajnosti i pouzdanosti pravila.
+\textbf{Apriori} je algoritam za otkrivanje asocijativnih pravila u skupovima podataka. Algoritam funkcionise na principu pronalazenja cestih uzoraka u podacima. Asocijativna pravila su izrazi u obliku "A sledi B", gde A i B predstavljaju skupove stavki, a strelica predstavlja implikaciju. Ova pravila se zasnivaju na merama \textit{support} i \textit{confidence}, koje se koriste za procenu znacajnosti i pouzdanosti pravila.
 
 Modelovanje i obrada skupa podatka su radjeni u IBM-ovom SPSS-u. S obzirom da ovaj algoritam radi samo sa kategorickim atributima, odbaceni su kontinualni atributi. Skup podataka je takve prirode da nije podoban za pravila pridruzivanja jer se uglavnom koristi za regresiju (Cilj je predvidjanje cene dijamanata). Ali, pokusacemo da uvidimo da li mozda postoje neka pravila izmedju kategorickih atributa \textit{clarity, color, cut} sa klasama koje smo predvidjali u klasifikaciji. Instancama je ponovo dodeljen novi atribut \textit{class} koji predstavlja opseg cene u kom se cena instance nalazi.
 
@@ -158,7 +157,7 @@ Procenat tacnosti (\textit{accuracy\_score}):
     \label{Slika1}
 \end{figure}
 
-Svi modeli daju zadovoljavajuce rezultate osim CategoricalNB. Moze se uociti da najbolje rezultate daju RandomForestClassifier i XGBClassifier, sto je i ocekivano od ensemble modela.\\
+Svi modeli daju zadovoljavajuce rezultate. Moze se uociti da najbolje rezultate daju RandomForestClassifier i XGBClassifier, sto je i ocekivano od ensemble modela.\\
 \pagebreak
 
 Preciznost je metrika koja predstavlja odnos tačno pozitivno klasifikovanih instanci prema zbiru tačno pozitivno i lažno pozitivno klasifikovanih instanci. Rezultati za preciznost (\textit{precision\_score}):

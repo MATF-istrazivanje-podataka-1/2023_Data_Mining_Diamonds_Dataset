@@ -2,9 +2,9 @@
 
 Dataset: https://www.tensorflow.org/datasets/catalog/diamonds
 
-Instalacija dodatnih biblioteka:
-pip install xgboost
-pip install kmodes
+Instalacija dodatnih biblioteka:  
+pip install xgboost  
+pip install kmodes  
 
 Ucitavanje iz **tensorflow_datasets** biblioteke: 
 

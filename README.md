@@ -1,6 +1,10 @@
 # Project - University of Belgrade, Faculty of Mathematics  
 
-Dataset: https://www.tensorflow.org/datasets/catalog/diamonds  
+Dataset: https://www.tensorflow.org/datasets/catalog/diamonds
+
+Instalacija dodatnih biblioteka:
+pip install xgboost
+pip install kmodes
 
 Ucitavanje iz **tensorflow_datasets** biblioteke: 
 
@@ -11,7 +15,7 @@ Ucitavanje iz **tensorflow_datasets** biblioteke:
 ***
 Models:  
 1. Clasification: DecisionTreeClassifier, KNeighborsClassifier, MLPClassifier, SVC, RandomForestClassifier and XGBClassifier  
-2. Clustering: KMeans, AgglomerativeClustering, DBSCAN, SpectralClustering
+2. Clustering: KMeans, K-modes, GaussianMixture
 3. Association rules: Apriori 
 
 

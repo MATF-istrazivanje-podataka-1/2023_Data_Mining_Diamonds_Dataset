@@ -122,21 +122,24 @@ Vec od najosnovnijeg modela se mogla uociti visoka performantnost. Jedina mana o
 
 \newpage
 \subsection{Klasterovanje}
-Zeleli bismo da znamo da li u nasem skupu pdoataka postoje neka grupisanja instanci. Te informacije nam mogu pomoci u klasifikacionom problemu, na primer za odredjivanje klasa koje mozemo predvideti. Ako su klasteri jasno definisani i ako bismo klase pravili po klasterima, verovatno je da bismo poboljsali predvidjanja modela.
+Zeleli bismo da znamo da li u nasem skupu pdoataka postoje neka grupisanja instanci. Te informacije nam mogu pomoci u klasifikacionom problemu, na primer za odredjivanje klasa koje mozemo predvideti. Ako su klasteri jasno definisani i ako bismo klase pravili po klasterima, verovatno je da bismo poboljsali predvidjanja modela. Ono sto nas najvise zanima je, da li je nasa podela na 4 klase dobra ili mozda postoji neka druga konfiguracija tih klasa koja bi dala bolje rezultate.\\
 
-Skup podataka cemo obraditi tako sto cemo ga undersemplovati kako bismo izbalansirali klase, ali i da bismo ubrzali proces treniranja modela. Klase ce biti iste, kao za problem klasifikacije. Nakon obrade imamo nesto vise od 6 000 instanci sto je i dalje dovoljno za pouzdano treniranje modela, s obzirom da je selektovan skup reprezentativan. Ono sto nas najvise zanima je, da li je nasa podela na 4 klase dobra ili mozda postoji neka druga konfiguracija tih klasa koja bi dala bolje rezultate. Za reprezentaciju dobijenih rezultata bice korisceni atributi \textit{carat} i \textit{price}.
+Na skupu podataka je isprobana tehnika PCA za smanjenje dimenzionalnosti i rezultat je dimenzije 4 sto nam i nije od nekog znacaja jer bismo zeleli da mozemo da vizualizujemo podatke na osnovu PCA komponenti.
 
-Modeli korisceni za klasterovanje su: \textit{KMeans, AgglomerativeClustering, DBSCAN i SpectralClustering}\\
+Modeli korisceni za klasterovanje su: \textit{KMeans, KModes i GaussianMixture}\\
 
-\textbf{KMeans} za cilj ima pronalazenje K klastera, pri cemu je K unapred odredjen broj klastera koje zelimo da formiramo. Koristimo ga zbog jednostavnosti implementacije i brzine izvrsavanja. Medjutim, treba imati na umu da KMeans moze biti osetljiv na inicijalnu postavku centroida klastera. 
+\textbf{KMeans} za cilj ima pronalazenje K klastera, pri cemu je K unapred odredjen broj klastera koje zelimo da formiramo. Koristimo ga zbog jednostavnosti implementacije i brzine izvrsavanja. Medjutim, treba imati na umu da KMeans moze biti osetljiv na inicijalnu postavku centroida klastera.
 
-Kako bismo to resili, uvescemo pomocnu funkciju \textit{plot\_search} koja ce nam pokrenuti vise modela za zadati opseg (0, k]. Za meru evaluacije modela koristicemo \textit{silhouette\_score}. Pored ove funkcije imacemo jos jednu, \textit{plot\_centroids} koja ce nam sluziti za vizualizaciju klastera i centroida dobijenih iteriranjem modela. Uvedena je i jos jedna funkcija, preuzeta sa \textit{scikit-learn} sajta, koja nam crta \textit{silhouette diagram}.\\ 
+Kako bismo to resili, uvescemo pomocnu funkciju \textit{cluster\_search} koja ce nam pokrenuti vise modela za zadati opseg (0, k]. Za meru evaluacije modela koristicemo \textit{silhouette\_score}. Pored toga, funkcija nam crta i \textit{silhouette diagram}.\\ 
 
-\textbf{AgglomerativeClustering} pocinje sa svakom instancom podataka kao jednim klasterom. Zatim se iterativno spajaju parovi klastera koji su najblizi jedan drugom na osnovu definisane metrike udaljenosti, pri cemu se formira hijerarhijska struktura klastera. Ovaj proces se ponavlja sve dok se svi klasteri ne spoje u jedan veliki klaster ili dok se ne postigne neki unapred definisani kriterijum zaustavljanja. Na kraju procesa, rezultat moze biti predstavljen kao dendrogram koji vizualizuje hijerarhijsko povezivanje klastera. Prednosti aglomerativnog klasterovanja ukljucuju jednostavnost implementacije i mogucnost rukovanja razlicitim metrikama udaljenosti. Takodje, ovaj algoritam omogucava fleksibilnost u izboru broja klastera, buduci da mozemo odabrati zeljeni broj klastera posmatrajuci rezultujuci dendrogram. Od pomocnih funkcija koriste se, vec opisane, \textit{plot\_search} i funkcija za crtanje \textit{silhouette diagram}-a.\\
+\textbf{KModes} je algoritam za klasterovanje slican \textit{KMeans-u} koji je sposoban za obradjivanje kategorickih podataka. Algoritam je prosirenje k-means algoritma, koji je dizajniran za numericke podatke. Umesto da koristi euklidsku udaljenost za merenje slicnosti izmedju podataka, kmodes koristi metriku koja je specificna za kategoricke atribute. Cilj kmodes algoritma je grupisati podatke u klastera tako da se minimizuje ukupna udaljenost izmedju podataka i modova (najcesce vrednosti) u svakom klasteru. Algoritam iterativno azurira klastere i konvergira ka stabilnom rasporedu.
 
-\textbf{DBSCAN} je algoritam klasterovanja zasnovan na gustini koji se koristi za grupisanje podataka na osnovu njihove prostorne raspodele. Ovaj algoritam je sposoban da identifikuje klasterovanje u skupu podataka bez potrebe za unapred definisanim brojem klastera. DBSCAN razlikuje tri vrste tacaka: pogodjene tacke (core points), susedne tacke (border points) i tacke suma (noise points). Pogodjene tacke se nalaze unutar klastera, susedne tacke su u blizini klastera, dok tacke suma ne pripadaju nijednom klasteru. DBSCAN ima nekoliko prednosti, ukljucujuci sposobnost otkrivanja klastera proizvoljnih oblika, otpornost na sum i sposobnost rukovanja promenljivim gustinama klastera. Od pomocnih funkcija tu je samo \textit{plot\_search}.\\
+S obzirom da u skupu podataka imamo 3 kategoricka atributa, najvise se oslanjamo na rezultate ovog algoritma\\
 
-\textbf{SpectralClustering} je algoritam klasterovanja koji se koristi za grupisanje podataka na osnovu spektralne analize matrice slicnosti. Ovaj algoritam ima sposobnost otkrivanja slozenih struktura i nelinearnih veza medju podacima. Vazno je napomenuti da spektralno klasterovanje zahteva odabir odgovarajucih parametara, kao sto su broj klastera i metoda konstrukcije matrice slicnosti. Pravilan izbor ovih parametara je kljucan za postizanje kvalitetnih rezultata klasterovanja. Mana je to sto spektralno klasterovanje moze biti komputaciono zahtevno za velike skupove podataka. Nakon \textit{plot\_search}-a i analize \textit{silhouette} koeficijenta za razlicit broj klastera, pazljivo su razmatrani svi rezultati i kako predstavljeni pomocu funkcije za crtanje \textit{silhouette diagram}-a.\\
+\textbf{GaussianMixture} je algoritam za modelovanje verovatnoce i klasterovanje podataka koji se zasniva na Gausovim raspodelama. Ovaj algoritam se koristi za pronalazenje skrivenih grupa ili klastera u podacima.
+GaussianMixture je superpozicija nekoliko Gausovih raspodela, pri cemu svaka komponenta predstavlja jedan klaster. Algoritam procenjuje parametre raspodele, kao sto su srednje vrednosti (centroidi), matrice kovarijanse i tezine komponenata. Kroz iterativni proces, algoritam pokusava da pronadje najbolju raspodelu komponenata koja najbolje odgovara podacima.
+
+
 
 \subsection{Pravila pridruzivanja}
 \textbf{Apriori} je algoritam za otkrivanje asocijativnih pravila u skupovima podataka. Algoritam funkcionise na principu pronalazenja cestih uzoraka u podacima. Asocijativna pravila su izrazi u obliku "A sledi B", gde A i B predstavljaju skupove stavki, a strelica predstavlja implikaciju. Ova pravila se zasnivaju na merama \textit{support} i \textit{confidence}, koje se koriste za procenu znacajnosti i pouzdanosti pravila.
@@ -253,7 +256,7 @@ Nakon uzimanja u obzir svih metoda evaluacije modela koji su korisceni, ocigledn
 
 \pagebreak
 \subsection*{Rezultati klasterovanja}
-Metrike za evaluaciju modela klasterovanja koje su koriscene su: \textit{Silhouette score, Dunn index, Rand index i Intra-cluster distances}. Razmatrani modeli korisceni za klasterovanje su: \textit{KMeans, AgglomerativeClustering, DBSCAN i SpectralClustering}.\\
+Metrike za evaluaciju modela klasterovanja koje su koriscene su: \textit{Silhouette score, Dunn index, Rand index i Intra-cluster distances}. Razmatrani modeli korisceni za klasterovanje su: \textit{KMeans, KModes i GaussianMixture}.\\
 
 Silueta skor je metrika koja meri koliko dobro je svaki objekat dodeljen odgovarajucem klasteru, uzimajuci u obzir gustinu i razdvajanje klastera. Vrednosti Silhouette koeficijenta se krecu u opsegu od -1 do 1. Vece vrednosti silueta koeficijenta ukazuju na bolje klasterovanje, pri cemu vrednost bliska 1 ukazuje na dobro definisane i odvojene klastera, dok vrednost bliska -1 ukazuje na objekte koji su pogresno dodeljeni klasterima. Silueta skor za modele: 
 \begin{figure}[h]
@@ -263,7 +266,9 @@ Silueta skor je metrika koja meri koliko dobro je svaki objekat dodeljen odgovar
     \label{Slika11}
 \end{figure}
 
-AgglomerativeClustering daje najbolje rezultate za svoja 2 klastera.\\
+Svakako ocene nisu zadovoljavajuce da bismo mogli da kazemo da imamo neke klastere.
+Takodje treba uzeti u obzir da su Kmeans i GaussianMixture osetljivi na kategoricke promenljive te daju ovakve rezultate.
+Najrealniju sliku klasterovanja daje KModes\\
 
 Dunn index je metrika koja meri razdvajanje izmedju klastera i gustocu objekata unutar klastera. Visoke vrednosti Dunn indeksa ukazuju na dobro odvojene klastera i dobru gustinu unutar klastera, dok niske vrednosti ukazuju na manje jasno definisane klastere i vecu rasprsenost objekata.\pagebreak
 
@@ -276,7 +281,7 @@ Dunn index za modele:
 \end{figure}
 \\
 
-U prvoj metrici bismo odmah otpisali DBSCAN, ali mozemo videti da po ovoj metrici daje daleko bolje rezultate nego ostali. To ne treba da nas zavara jer kada uzmemo u obzir sta meri ova metrika i prisetimo se koji su klasteri odredjeni (Slika 15), jasno nam je zasto je ovakav rezultat.\\
+Lose ocene ukazuju na rasprsenost podataka i nisku gustinu "klastera". Vec nakon vizualne analize primenom \textit{pairplot}-a, bilo je jasno da u skupu podataka nemamo klastere.\\
 
 Rand indeks je metrika koja se koristi za merenje slicnosti izmedju predvidjenih klastera i stvarnih klasa (ukoliko su dostupne). Ova metrika ocenjuje koliko su tacno klasteri modela uskladjeni sa pravim klasama.
 Vrednosti \textit{Rand indeksa} se krecu u opsegu od 0 do 1. Rand indeks za modele:
@@ -287,7 +292,7 @@ Vrednosti \textit{Rand indeksa} se krecu u opsegu od 0 do 1. Rand indeks za mode
 \end{figure}
 \\
 
-Sada mozemo uociti da se KMeans najbolje pokazao. DBSCAN ima najnizu mogucu ocenu.\\
+Lose ocene ukazuju na slabo podudaranje klastera i pravih klasa koje su koriscene za svrhe klasifikacije.\\
 
 Intra-klaster rastojanje je metrika koja se koristi za merenje prosecne udaljenosti izmedju objekata unutar istog klastera. Ova metrika ocenjuje kompaktnost i gustinu klastera tako sto racuna prosecno rastojanje izmedju svih parova objekata unutar istog klastera. Manje vrednosti intra-klaster rastojanja ukazuju na bolje klasterovanje, jer ukazuju na to da su objekti unutar klastera blizi jedni drugima. Intra-klaster rastojanje za modele:
 \begin{figure}[h]
@@ -296,23 +301,12 @@ Intra-klaster rastojanje je metrika koja se koristi za merenje prosecne udaljeno
     \label{Slika14}
 \end{figure}
 
-S obzirom na prirodu ove metrike, mozemo uociti da je KMeans ponovo najbolji dok je DBSCAN daleko losiji od ostalih.\\
-
-Sada cemo pogledati predvidjene klastere i njihovu balansiranost:
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=12cm, height=4cm]{clusters.png}
-    \label{Slika15}
-\end{figure}
-\\
-
-Na osnovu svega ovoga, moze se zakljuciti:\\
-KMeans nam pokazuje da postoje 4 solidno balansirana klastera. Odgovara nasem klasifikacionom problemu, sto potvrdjuje da je podela na 4 opsega cene dobra odluka.\\
-AgglomerativeClustering nam pokazuje dobru podelu na dva klastera cija je odlicna balansiranost.\\
-DBSCAN nam pokazuje da ipak postoji velika neuravnotezenost po odredjenom atributu. Taj atribut je carat.\\
-SpectralClustering nam pokazuje da podela na 3 klastera nije losa ideja\\
+Rezultat ukazuje na slabu gustinu unutar "klastera".\\
 
 
+Na osnovu svih razmatranih evaluacija modela klasterovanja i nakon vizualne analize predvidjenih klastera, lako mozemo zakljuciti da u skupu podataka ne postoje klasteri.
+
+\newpage
 \subsection*{Rezultati pravila pridruzivanja}
 Apriori algoritam nam je pokazao sledece rezultate za kategoricke atribute \textit{clarity, color, cut} i njihovu vezu sa \textit{class} atributom:
 \begin{figure}[h]
@@ -335,7 +329,7 @@ Sto se skupa podataka tice, podaci ispunjavaju kvantitativne i kvalitativne mere
 
 Klasifikacija nam je pokazala da nam je najbolji model za nas skup podataka \textbf{RandomForestClassifier}.
 
-Klasterovanje nam je pokazalo da postoji vise mogucih podela kontinualnog opsega cene i da mozemo dobiti dobre rezultate za \textbf{2, 3 ili 4} klase.
+Klasterovanje nam je pokazalo da ne postoje nikakve grupacije na skupu podataka.
 
 Pravila pridruzivanja su nam samo potrvdila ocigledno, da nisko kvalitetni dijamanti teze tome da kostaju manje. 
 
